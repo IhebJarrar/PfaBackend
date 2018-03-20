@@ -1,16 +1,14 @@
 package com.exam.gestionExams.repository;
 
-import java.util.List;
+import com.exam.gestionExams.model.Epreuve;
+import com.exam.gestionExams.model.Groupe;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.exam.gestionExams.model.Epreuve;
-import com.exam.gestionExams.model.Groupe;
+import java.util.List;
 
 
 @Transactional
@@ -26,7 +24,7 @@ public class EpreuveRepositoryImpl implements EpreuveRepositoryCustom {
     @Override
 	public void effacerEpreuveVide() {
 		epreuves=epreuveRepository.findAll();
-		for (Epreuve epreuve: epreuves) 
+		for (Epreuve epreuve: epreuves)
 		{
 			if(epreuve.getNom().equals(""))
 				epreuveRepository.delete(epreuve.getId());
@@ -37,11 +35,11 @@ public class EpreuveRepositoryImpl implements EpreuveRepositoryCustom {
 	public void createEpreuvesForAllGroupes() {
 		this.effacerEpreuveVide();
 		epreuves=epreuveRepository.findAll();
-		for (Epreuve epreuveExistante: epreuves) 
+		for (Epreuve epreuveExistante: epreuves)
 		{
 			//requete pour avoir les groupes d'une epreuve
 			//il faut utiliser nom des classes et pas nom des tables(aussi pour les attr)
-			TypedQuery<Groupe> requeteGroupe=em.createQuery("select g from Matiere m , Classe c , Groupe g " + 
+			TypedQuery<Groupe> requeteGroupe=em.createQuery("select g from Matiere m , Classe c , Groupe g " +
 					"WHERE c.nivSpecialite.id=m.nivSpecialite.id AND g.classe.id=c.id AND m.id=?1",Groupe.class);
 			requeteGroupe.setParameter(1, epreuveExistante.getMatiere().getId());
 			//recuperer les resultats de la requete
@@ -72,3 +70,4 @@ public class EpreuveRepositoryImpl implements EpreuveRepositoryCustom {
 	}
 
 }
+

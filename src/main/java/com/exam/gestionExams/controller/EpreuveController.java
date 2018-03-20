@@ -1,11 +1,11 @@
 package com.exam.gestionExams.controller;
 
+import com.exam.gestionExams.repository.EpreuveRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.exam.gestionExams.repository.EpreuveRepository;
 
 @RestController
 @RequestMapping("api/")
@@ -18,3 +18,4 @@ public class EpreuveController {
     	epreuveRepository.createEpreuvesForAllGroupes();
     }
 }
+
