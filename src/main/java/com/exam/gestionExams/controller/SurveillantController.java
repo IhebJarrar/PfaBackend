@@ -3,10 +3,8 @@ package com.exam.gestionExams.controller;
 import com.exam.gestionExams.model.Surveillant;
 import com.exam.gestionExams.repository.SurveillantRepository;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;

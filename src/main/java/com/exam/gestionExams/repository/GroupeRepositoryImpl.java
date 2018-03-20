@@ -24,7 +24,7 @@ public class GroupeRepositoryImpl implements GroupeRepositoryCustom {
     public void insertApropriateGroup() {
         List<Classe> classes = classeRepository.findAll();
         for (Classe classe: classes) {
-            Groupe[] groupes = new Groupe[classe.getNb_groupe()];
+            Groupe[] groupes = new Groupe[classe.getNbrGroupe()];
             int indice = 0;
             for(int i = 0; i < groupes.length; i++) {
                 groupes[i] = new Groupe();

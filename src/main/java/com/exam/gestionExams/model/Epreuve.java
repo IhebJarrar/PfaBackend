@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 
 	@Entity
 	public class Epreuve {
@@ -19,20 +19,20 @@ import javax.persistence.OneToOne;
 		private Long id;
 		private String nom;
 		private Float duree;
-		@OneToOne
+		@ManyToOne
 		@JoinColumn(name="local")
 		private Local local;
-		@OneToOne
+		@ManyToOne
 		@JoinColumn(name="creneau")
 		private Creneau creneau;
-		@OneToOne
+		@ManyToOne
 		@JoinColumn(name="groupe")
 		private Groupe groupe;
-		@OneToOne
+		@ManyToOne(fetch=FetchType.LAZY)
 		@JoinColumn(name="matiere")
 		private Matiere matiere;
-		@ManyToMany
-		@JoinTable(name="surveillance")
+		
+		@ManyToMany(mappedBy = "epreuves")
 		private List<Surveillant> surveillants=new ArrayList<Surveillant>();
 		
 		public long getId() {

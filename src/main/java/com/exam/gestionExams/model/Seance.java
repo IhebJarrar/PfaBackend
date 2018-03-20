@@ -10,6 +10,7 @@ public class Seance {
 	@GeneratedValue
 	private Long id;
 	private String nom;
+	private String heureDebut;
 	
 	public long getId() {
 		return id;
@@ -22,6 +23,12 @@ public class Seance {
 	}
 	public void setNom(String nom) {
 		this.nom = nom;
+	}
+	public String getHeureDebut() {
+		return heureDebut;
+	}
+	public void setHeureDebut(String heureDebut) {
+		this.heureDebut = heureDebut;
 	}
 	
 }

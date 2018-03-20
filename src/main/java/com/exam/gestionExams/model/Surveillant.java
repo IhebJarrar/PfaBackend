@@ -6,6 +6,7 @@ import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 @Entity
@@ -17,10 +18,12 @@ public class Surveillant {
 	private String nom;
 	private String type;
 	@ManyToMany
+	@JoinTable(name = "surveillance", joinColumns = @JoinColumn(name = "surv_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "epreuve_id", referencedColumnName = "id"))
 	private List<Epreuve> epreuves=new ArrayList<Epreuve>();
 	@ManyToMany
-	@JoinTable(name="disponibilite")
+	@JoinTable(name = "disponibilite", joinColumns = @JoinColumn(name = "surv_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "creneau_id", referencedColumnName = "id"))
 	private List<Creneau> creneaux=new ArrayList<Creneau>();
+	
 	
 	public List<Epreuve> getEpreuves() {
 		return epreuves;
