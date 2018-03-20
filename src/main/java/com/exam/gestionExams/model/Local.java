@@ -10,12 +10,14 @@ public class Local {
 	@GeneratedValue
 	private Long id;
 	private String nom;
-	private int etage;
+	private int capacite;
 	
-	public int getEtage() {
+	private String etage;
+	
+	public String getEtage() {
 		return etage;
 	}
-	public void setEtage(int etage) {
+	public void setEtage(String etage) {
 		this.etage = etage;
 	}
 	public long getId() {
@@ -29,6 +31,12 @@ public class Local {
 	}
 	public void setNom(String nom) {
 		this.nom = nom;
+	}
+	public int getCapacite() {
+		return capacite;
+	}
+	public void setCapacite(int capacite) {
+		this.capacite = capacite;
 	}
 	
 }

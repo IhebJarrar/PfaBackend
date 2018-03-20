@@ -25,7 +25,7 @@ import javax.persistence.TemporalType;
 		@JoinColumn(name="seance")
 		private Seance seance;
 		
-		@ManyToMany
+		@ManyToMany(mappedBy = "creneaux")
 		private List<Surveillant> surveillants=new ArrayList<Surveillant>();
 
 		public Date getDate() {

@@ -13,8 +13,8 @@ public class Matiere {
 	private Long id;
 	private String nom;
 	@ManyToOne
-	@JoinColumn(name="specialite")
-	private Specialite specialite;
+    @JoinColumn(name = "nivSpecialite")
+    private NivSpecialite nivSpecialite;
 	
 	public long getId() {
 		return id;
@@ -28,5 +28,12 @@ public class Matiere {
 	public void setNom(String nom) {
 		this.nom = nom;
 	}
+	public NivSpecialite getNivSpecialite() {
+		return nivSpecialite;
+	}
+	public void setNivSpecialite(NivSpecialite nivSpecialite) {
+		this.nivSpecialite = nivSpecialite;
+	}
+	
 	
 }

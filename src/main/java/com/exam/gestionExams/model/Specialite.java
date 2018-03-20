@@ -1,10 +1,14 @@
 package com.exam.gestionExams.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 	@Entity
 	public class Specialite {
@@ -16,6 +20,8 @@ import javax.persistence.ManyToOne;
 		@ManyToOne
 		@JoinColumn(name="departement")
 		private Departement departement;
+		@OneToMany(mappedBy = "niveau")
+		private List<NivSpecialite> nivSpecialites=new ArrayList<NivSpecialite>();
 		
 		
 		public Departement getDepartement() {
@@ -36,4 +42,5 @@ import javax.persistence.ManyToOne;
 		public void setNom(String nom) {
 			this.nom = nom;
 		}
+		
 }
