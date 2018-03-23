@@ -12,12 +12,12 @@ public class Local {
 	private String nom;
 	private int capacite;
 	
-	private String etage;
+	private int etage;
 	
-	public String getEtage() {
+	public int getEtage() {
 		return etage;
 	}
-	public void setEtage(String etage) {
+	public void setEtage(int etage) {
 		this.etage = etage;
 	}
 	public long getId() {

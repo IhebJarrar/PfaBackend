@@ -19,16 +19,16 @@ public class Surveillant {
 	private String type;
 	@ManyToMany
 	@JoinTable(name = "surveillance", joinColumns = @JoinColumn(name = "surv_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "epreuve_id", referencedColumnName = "id"))
-	private List<Epreuve> epreuves=new ArrayList<Epreuve>();
+	private List<Epreuves> epreuves=new ArrayList<Epreuves>();
 	@ManyToMany
 	@JoinTable(name = "disponibilite", joinColumns = @JoinColumn(name = "surv_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "creneau_id", referencedColumnName = "id"))
 	private List<Creneau> creneaux=new ArrayList<Creneau>();
 	
 	
-	public List<Epreuve> getEpreuves() {
+	public List<Epreuves> getEpreuves() {
 		return epreuves;
 	}
-	public void setEpreuves(List<Epreuve> epreuves) {
+	public void setEpreuves(List<Epreuves> epreuves) {
 		this.epreuves = epreuves;
 	}
 	public List<Creneau> getCreneaux() {

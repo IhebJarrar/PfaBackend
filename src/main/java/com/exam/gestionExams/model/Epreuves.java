@@ -12,7 +12,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
 	@Entity
-	public class Epreuve {
+	public class Epreuves {
 
 		@Id
 		@GeneratedValue

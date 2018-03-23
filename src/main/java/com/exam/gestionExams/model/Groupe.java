@@ -14,6 +14,7 @@ import javax.persistence.ManyToOne;
 		@GeneratedValue
 		private Long id;
 		private String nom;
+		private int capacite;
 		@ManyToOne
 		@JoinColumn(name="classe")
 		private Classe classe;
@@ -35,6 +36,12 @@ import javax.persistence.ManyToOne;
 		}
 		public void setNom(String nom) {
 			this.nom = nom;
+		}
+		public int getCapacite() {
+			return capacite;
+		}
+		public void setCapacite(int capacite) {
+			this.capacite = capacite;
 		}
 }
 

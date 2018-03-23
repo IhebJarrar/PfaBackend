@@ -1,6 +1,6 @@
 package com.exam.gestionExams.repository;
 
-import com.exam.gestionExams.model.Epreuve;
+import com.exam.gestionExams.model.Epreuves;
 import com.exam.gestionExams.model.Groupe;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,12 +19,12 @@ public class EpreuveRepositoryImpl implements EpreuveRepositoryCustom {
 	@PersistenceContext
     EntityManager em;
 	
-	List<Epreuve> epreuves;
+	List<Epreuves> epreuves;
 
     @Override
 	public void effacerEpreuveVide() {
 		epreuves=epreuveRepository.findAll();
-		for (Epreuve epreuve: epreuves)
+		for (Epreuves epreuve: epreuves)
 		{
 			if(epreuve.getNom().equals(""))
 				epreuveRepository.delete(epreuve.getId());
@@ -35,7 +35,7 @@ public class EpreuveRepositoryImpl implements EpreuveRepositoryCustom {
 	public void createEpreuvesForAllGroupes() {
 		this.effacerEpreuveVide();
 		epreuves=epreuveRepository.findAll();
-		for (Epreuve epreuveExistante: epreuves)
+		for (Epreuves epreuveExistante: epreuves)
 		{
 			//requete pour avoir les groupes d'une epreuve
 			//il faut utiliser nom des classes et pas nom des tables(aussi pour les attr)
@@ -54,7 +54,7 @@ public class EpreuveRepositoryImpl implements EpreuveRepositoryCustom {
 				for(int i=0;i<groupes.size()-1;i++)
 				{
 					//creer epreuve en lui attribuant les memes proprietes de l'epreuve existante mais groupe varie (selon les groupes trouvés par la requete)
-					Epreuve epreuveNouvelle=new Epreuve();
+					Epreuves epreuveNouvelle=new Epreuves();
 					epreuveNouvelle.setNom(epreuveExistante.getNom());
 					epreuveNouvelle.setDuree(epreuveExistante.getDuree());
 					epreuveNouvelle.setCreneau(epreuveExistante.getCreneau());
