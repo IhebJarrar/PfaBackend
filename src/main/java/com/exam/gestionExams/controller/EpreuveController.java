@@ -17,5 +17,9 @@ public class EpreuveController {
     public void insertEpreuves() {
     	epreuveRepository.createEpreuvesForAllGroupes();
     }
+    @RequestMapping(value = "epreuves/updateLocal", method = RequestMethod.GET)
+    public void updateLocal() {
+    	epreuveRepository.affecterLocaux();
+    }
 }
 
