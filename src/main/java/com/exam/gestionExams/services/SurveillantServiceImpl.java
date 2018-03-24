@@ -1,7 +1,7 @@
 package com.exam.gestionExams.services;
 
-import com.exam.gestionExams.models.Surveillant;
-import com.exam.gestionExams.repositories.SurveillantRepository;
+import com.exam.gestionExams.model.Surveillant;
+import com.exam.gestionExams.repository.SurveillantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

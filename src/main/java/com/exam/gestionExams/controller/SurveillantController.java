@@ -5,8 +5,10 @@ import com.exam.gestionExams.model.Surveillant;
 import com.exam.gestionExams.model.SurveillantDisponibilite;
 import com.exam.gestionExams.repository.CreneauRepository;
 import com.exam.gestionExams.repository.SurveillantRepository;
+import com.exam.gestionExams.services.SurveillantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,6 +27,8 @@ public class SurveillantController {
 	private SurveillantRepository surveillantRepository;
 	@Autowired
 	CreneauRepository creneauRepository;
+	@Autowired
+	private SurveillantService surveillantService;
 
 	@RequestMapping(value = "surveillants", method = RequestMethod.GET)
 	public List<Surveillant> getAllSurveillant() {
@@ -48,6 +52,14 @@ public class SurveillantController {
 		surveillantRepository.saveAndFlush(surveillant);
 
 		return surveillant;
+	}
+	@GetMapping(value = "surveillants/treated")
+	public List<Surveillant> getAllTreatedSurveillants() {
+		return surveillantService.getAllTreatedSurveillants();
+	}
+	@GetMapping(value = "surveillants/noTreated")
+	public List<Surveillant> getAllNoTreatedSurveillants() {
+		return surveillantService.getAllNoTreatedSurveillants();
 	}
 	/**@RequestMapping(value = "surveillants", method = RequestMethod.POST)
 	public Surveillant createSurveillant(@RequestBody Surveillant surveillant) {

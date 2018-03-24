@@ -1,6 +1,6 @@
 package com.exam.gestionExams.services;
 
-import com.exam.gestionExams.models.Surveillant;
+import com.exam.gestionExams.model.Surveillant;
 
 import java.util.List;
 
