@@ -1,9 +1,14 @@
 package com.exam.gestionExams.repository;
 
+import com.exam.gestionExams.model.Creneau;
 import com.exam.gestionExams.model.Epreuves;
+import com.exam.gestionExams.model.EpreuvesWithOtherAttribute;
 import com.exam.gestionExams.model.Groupe;
 import com.exam.gestionExams.model.LocalWithAffectation;
+import com.exam.gestionExams.model.Parameters;
 import com.exam.gestionExams.model.ResultEpreuveGroupe;
+import com.exam.gestionExams.model.Surveillant;
+import com.exam.gestionExams.model.SurveillantWithOtherAttribute;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +17,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -102,6 +108,20 @@ public class EpreuveRepositoryImpl implements EpreuveRepositoryCustom {
 			//si salleTrouvés n'est pas vide,affecter la 1er salle renvoyé a l'epreuve courante puis maj affectation de local
 			if(salleTrouvées.size()!=0)
 			{
+				/*for(int i=0;i<salleTrouvées.size();i++)
+				{
+					if (salleTrouvées.get(i).getLocal().getCapacite()-epreuve.getCapacite()<10 && salleTrouvées.get(i).getLocal().getCapacite()-epreuve.getCapacite()>=2)
+					{
+						epreuve.getEpreuve().setLocal(salleTrouvées.get(i).getLocal());
+						salleTrouvées.get(i).setAffectation((int)epreuve.getEpreuve().getCreneau().getId());
+						break;
+					}
+					if(epreuve.getEpreuve().getLocal()==null)
+					{
+						epreuve.getEpreuve().setLocal(salleTrouvées.get(0).getLocal());
+						salleTrouvées.get(0).setAffectation((int)epreuve.getEpreuve().getCreneau().getId());
+					}
+				}*/
 				epreuve.getEpreuve().setLocal(salleTrouvées.get(0).getLocal());
 				salleTrouvées.get(0).setAffectation((int)epreuve.getEpreuve().getCreneau().getId());
 			}
@@ -118,5 +138,172 @@ public class EpreuveRepositoryImpl implements EpreuveRepositoryCustom {
 		}
 	}
 
+	@Override
+	public void affecterSurv() {
+		
+		//requete pour avoir les surveillants permanents
+		TypedQuery<SurveillantWithOtherAttribute> requetesurvPermanent=em.createQuery("select new com.exam.gestionExams.model.SurveillantWithOtherAttribute(s,0.0f,s.nbrHeure) from Surveillant s WHERE s.type='EPI'",SurveillantWithOtherAttribute.class);
+		//recuperer les resultats de la requete survPermanent
+		Collection<SurveillantWithOtherAttribute> survPermanents=requetesurvPermanent.getResultList();
+		
+		//requete pour avoir les surveillants Vacataires
+		TypedQuery<SurveillantWithOtherAttribute> requetesurvVacataires=em.createQuery("select new com.exam.gestionExams.model.SurveillantWithOtherAttribute(s,0.0f,s.nbrHeure) from Surveillant s WHERE s.type!='EPI' OR s.type is null",SurveillantWithOtherAttribute.class);
+		//recuperer les resultats de la requete survVacataires
+		Collection<SurveillantWithOtherAttribute> survVacataires=requetesurvVacataires.getResultList();
+
+		//trié les creneaux des differents surveillant en ordre croissant
+		trierCreneauSurveillant(survPermanents);
+		trierCreneauSurveillant(survVacataires);
+				
+		//requete pour avoir les epreuves permanents=duree 1.5
+		TypedQuery<EpreuvesWithOtherAttribute> requeteEpreuvePermanent=em.createQuery("select new com.exam.gestionExams.model.EpreuvesWithOtherAttribute(e,0) from Epreuves e",EpreuvesWithOtherAttribute.class);
+		//recuperer les resultats de la requete EpreuvesPermanent
+		Collection<EpreuvesWithOtherAttribute> epreuvesPermanents=requeteEpreuvePermanent.getResultList();
+				
+		//recuperer les parametres d'attribution du nbr de surv par epreuve
+		TypedQuery<Parameters> requeteParameters=em.createQuery("select p from Parameters p",Parameters.class);
+		Parameters parameters=requeteParameters.getSingleResult();
+				
+		//affecter nbr de surveillant  de l'epreuve suivant capacité du groupe
+		affecterNbrHeureSurveillance(epreuvesPermanents,parameters);
+				
+		//repartir les surveillants permanents aux epreuves
+		AffectationEpreuvesToSurveillant(survPermanents,true,epreuvesPermanents);
+		
+		//calcul heures restant a surveiller
+		List<EpreuvesWithOtherAttribute>  epreuvesRestant =epreuvesPermanents.stream().filter((epreuve)-> epreuve.getNbrSurveillant()!=0 ).collect(Collectors.toList());
+		float heureRestant=calculHeuresSurveillanceRestant(epreuvesRestant);
+		
+		//calcul total des creneau des surv vaca
+		int nbrCreneauTotalVaca=calculTotalCrenOfSurvVaca(survVacataires);
+
+		//calcul les heures des vacataires selon heures restant+ses disponibilités
+		calculHeureSurveillanceForEachVacataire(survVacataires,heureRestant,nbrCreneauTotalVaca);
+				
+		//repartir les surveillants vacataire aux epreuves
+		AffectationEpreuvesToSurveillant(survVacataires,false,epreuvesPermanents);
+				
+		//enregistrer les données dans bd
+		updatingSurveillantsForEpreuve(epreuvesPermanents);
+	}
+	
+	private int calculTotalCrenOfSurvVaca(Collection<SurveillantWithOtherAttribute> survVacataires) {
+		int nbrCreneauTotalVaca=0;
+		for (SurveillantWithOtherAttribute surv: survVacataires)
+		{
+			 nbrCreneauTotalVaca+=surv.getSurveillant().getCreneaux().size();
+		}
+		return nbrCreneauTotalVaca;
+	}
+
+	public void updatingSurveillantsForEpreuve(Collection<EpreuvesWithOtherAttribute> epreuves) {
+		for(EpreuvesWithOtherAttribute epreuve:epreuves) {
+			Epreuves e=epreuve.getEpreuve();
+			epreuveRepository.saveAndFlush(e);
+		}
+	}
+private void AffectationEpreuvesToSurveillant(Collection<SurveillantWithOtherAttribute> surveillants, boolean b,
+			Collection<EpreuvesWithOtherAttribute> epreuvesPermanents) {
+	List<EpreuvesWithOtherAttribute>  epreuvesTrouvées;
+	for (SurveillantWithOtherAttribute surveillant: surveillants)
+	{
+		for (Creneau cren: surveillant.getSurveillant().getCreneaux())
+		{
+			//filter epreuves: on prend les epreuves durant le creneau en cours qui ont nbr de surveillant not null et de durée 1.5
+			//(en cas true:affectation surv permanent) , en cas false : affectation surv vacataire
+			if(b)
+			{
+				epreuvesTrouvées =epreuvesPermanents.stream().filter((epreuve)-> epreuve.getEpreuve().getCreneau().getId()== cren.getId() && epreuve.getNbrSurveillant()!=0 && epreuve.getEpreuve().getDuree()==1.5).collect(Collectors.toList());
+			}
+			else
+			{
+				epreuvesTrouvées =epreuvesPermanents.stream().filter((epreuve)-> epreuve.getEpreuve().getCreneau().getId()== cren.getId() && epreuve.getNbrSurveillant()!=0).collect(Collectors.toList());
+
+			}
+			if(surveillant.getHoursLeft()<=0)
+			{
+				break;
+			}
+			if(epreuvesTrouvées.size()!=0)
+			{
+				//créer le surveillant qu'on est entrain de le parcourir
+				Surveillant s=surveillant.getSurveillant();
+				ajoutSurveillantToEpreuve(s,epreuvesTrouvées.get(0).getEpreuve());
+				epreuvesTrouvées.get(0).setNbrSurveillant(epreuvesTrouvées.get(0).getNbrSurveillant()-1);
+				//actualiser la collection epreuves permenant
+				for (EpreuvesWithOtherAttribute epreuvePermanent: epreuvesPermanents)
+				{
+					if(epreuvePermanent.getEpreuve().getId()== epreuvesTrouvées.get(0).getEpreuve().getId())
+					{
+						epreuvePermanent=epreuvesTrouvées.get(0);
+						break;
+					}
+				}
+				//actualiser les infos du surv
+				surveillant.setHoursLeft(surveillant.getHoursLeft()-1.5f);
+				surveillant.setHoursAffected(surveillant.getHoursAffected()+1.5f);
+			}
+		}
+	}
+	}
+private void ajoutSurveillantToEpreuve(Surveillant s,Epreuves e)
+{
+	e.getSurveillants().add(s);
+}
+
+private void affecterNbrHeureSurveillance(Collection<EpreuvesWithOtherAttribute> epreuvesPermanents,
+			Parameters parameters) {
+	
+	for (EpreuvesWithOtherAttribute epreuvePermanent: epreuvesPermanents)
+	{
+		if(epreuvePermanent.getEpreuve().getGroupe().getCapacite()<= parameters.getMaxForOneSurv())
+			{
+				epreuvePermanent.setNbrSurveillant(1);
+			}
+		else if(epreuvePermanent.getEpreuve().getGroupe().getCapacite()<= parameters.getMaxForTwoSurv())
+			{
+				epreuvePermanent.setNbrSurveillant(2);
+			}
+		else
+			epreuvePermanent.setNbrSurveillant(3);
+			
+	}
+		
+	}
+
+private void trierCreneauSurveillant(Collection<SurveillantWithOtherAttribute> listeSurveillants) {
+	for (SurveillantWithOtherAttribute surveillant: listeSurveillants)
+	{
+		surveillant.getSurveillant().getCreneaux().sort(Comparator.comparing(Creneau::getId));
+	}
+		
+	}
+
+private void calculHeureSurveillanceForEachVacataire(Collection<SurveillantWithOtherAttribute> survVacataires,float nbrHeureSurvRestants,int totalCrenVaca) {
+	int nbrCreneauxDisponible=0;
+	float pourcentageCreneauParVacataire=0;
+	float nbrHeuresParVacataire=0;
+	for (SurveillantWithOtherAttribute surv: survVacataires)
+	{
+		nbrCreneauxDisponible=surv.getSurveillant().getCreneaux().size();
+		System.out.println("nbrCreneauxDisponible =" +nbrCreneauxDisponible);
+		pourcentageCreneauParVacataire=(float)nbrCreneauxDisponible/totalCrenVaca;
+		System.out.println("pourcentageCreneauParVacataire =" +pourcentageCreneauParVacataire);
+		nbrHeuresParVacataire=Math.round(nbrHeureSurvRestants*pourcentageCreneauParVacataire);
+		surv.setHoursAffected(nbrHeuresParVacataire);
+		surv.getSurveillant().setNbrHeure(nbrHeuresParVacataire);
+		System.out.println("nbrHeuresParVacataire =" +nbrHeuresParVacataire);
+	}
+	}
+
+public float calculHeuresSurveillanceRestant(Collection<EpreuvesWithOtherAttribute> epreuvesRestant)
+{	
+	float nbr=0;
+	for (EpreuvesWithOtherAttribute epreuve: epreuvesRestant)
+	{
+		nbr+=epreuve.getEpreuve().getDuree()*epreuve.getNbrSurveillant();
+	}
+	return nbr;
+}
 }
 

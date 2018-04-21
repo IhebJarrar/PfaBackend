@@ -10,5 +10,6 @@ public interface EpreuveRepositoryCustom {
 	void createEpreuvesForAllGroupes();
 	void affecterLocaux();
 	void updatingLocalForEpreuve(Collection<ResultEpreuveGroupe> epreuves);
+	void affecterSurv();
 		
 }

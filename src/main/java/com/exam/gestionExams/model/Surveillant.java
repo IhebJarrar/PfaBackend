@@ -17,8 +17,8 @@ public class Surveillant {
 	private Long id;
 	private String nom;
 	private String type;
-	@ManyToMany
-	@JoinTable(name = "surveillance", joinColumns = @JoinColumn(name = "surv_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "epreuve_id", referencedColumnName = "id"))
+	private Float nbrHeure;
+	@ManyToMany(mappedBy = "surveillants")
 	private List<Epreuves> epreuves=new ArrayList<Epreuves>();
 	@ManyToMany
 	@JoinTable(name = "disponibilite", joinColumns = @JoinColumn(name = "surv_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "creneau_id", referencedColumnName = "id"))
@@ -31,6 +31,7 @@ public class Surveillant {
 	public void setEpreuves(List<Epreuves> epreuves) {
 		this.epreuves = epreuves;
 	}
+	
 	public List<Creneau> getCreneaux() {
 		return creneaux;
 	}
@@ -55,5 +56,12 @@ public class Surveillant {
 	public void setNom(String nom) {
 		this.nom = nom;
 	}
+	public Float getNbrHeure() {
+		return nbrHeure;
+	}
+	public void setNbrHeure(Float nbrHeure) {
+		this.nbrHeure = nbrHeure;
+	}
+	
 	
 }

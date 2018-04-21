@@ -8,8 +8,11 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 	@Entity
 	public class Epreuves {
@@ -28,11 +31,13 @@ import javax.persistence.ManyToOne;
 		@ManyToOne
 		@JoinColumn(name="groupe")
 		private Groupe groupe;
+		@JsonIgnore
 		@ManyToOne(fetch=FetchType.LAZY)
 		@JoinColumn(name="matiere")
 		private Matiere matiere;
 		
-		@ManyToMany(mappedBy = "epreuves")
+		@ManyToMany
+		@JoinTable(name = "surveillance", joinColumns = @JoinColumn(name = "epreuve_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "surv_id", referencedColumnName = "id"))
 		private List<Surveillant> surveillants=new ArrayList<Surveillant>();
 		
 		public long getId() {
@@ -77,4 +82,11 @@ import javax.persistence.ManyToOne;
 		public void setNom(String nom) {
 			this.nom = nom;
 		}
+		public List<Surveillant> getSurveillants() {
+			return surveillants;
+		}
+		public void setSurveillants(List<Surveillant> surveillants) {
+			this.surveillants = surveillants;
+		}
+		
 }
