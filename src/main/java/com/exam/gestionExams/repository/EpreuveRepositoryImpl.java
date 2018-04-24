@@ -165,7 +165,7 @@ public class EpreuveRepositoryImpl implements EpreuveRepositoryCustom {
 		Parameters parameters=requeteParameters.getSingleResult();
 				
 		//affecter nbr de surveillant  de l'epreuve suivant capacité du groupe
-		affecterNbrHeureSurveillance(epreuvesPermanents,parameters);
+		affecterNbrSurveillant(epreuvesPermanents,parameters);
 				
 		//repartir les surveillants permanents aux epreuves
 		AffectationEpreuvesToSurveillant(survPermanents,true,epreuvesPermanents);
@@ -220,7 +220,7 @@ private void AffectationEpreuvesToSurveillant(Collection<SurveillantWithOtherAtt
 				epreuvesTrouvées =epreuvesPermanents.stream().filter((epreuve)-> epreuve.getEpreuve().getCreneau().getId()== cren.getId() && epreuve.getNbrSurveillant()!=0).collect(Collectors.toList());
 
 			}
-			if(surveillant.getHoursLeft()<=0)
+			if(surveillant.getHoursLeft()<=0.5)//le surv a plus que 30min
 			{
 				break;
 			}
@@ -251,7 +251,7 @@ private void ajoutSurveillantToEpreuve(Surveillant s,Epreuves e)
 	e.getSurveillants().add(s);
 }
 
-private void affecterNbrHeureSurveillance(Collection<EpreuvesWithOtherAttribute> epreuvesPermanents,
+private void affecterNbrSurveillant(Collection<EpreuvesWithOtherAttribute> epreuvesPermanents,
 			Parameters parameters) {
 	
 	for (EpreuvesWithOtherAttribute epreuvePermanent: epreuvesPermanents)

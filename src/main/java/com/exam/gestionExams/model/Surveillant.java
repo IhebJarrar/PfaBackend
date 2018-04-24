@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 public class Surveillant {
 
@@ -19,6 +21,7 @@ public class Surveillant {
 	private String type;
 	private Float nbrHeure;
 	@ManyToMany(mappedBy = "surveillants")
+	@JsonIgnore
 	private List<Epreuves> epreuves=new ArrayList<Epreuves>();
 	@ManyToMany
 	@JoinTable(name = "disponibilite", joinColumns = @JoinColumn(name = "surv_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "creneau_id", referencedColumnName = "id"))

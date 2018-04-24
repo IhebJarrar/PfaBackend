@@ -37,6 +37,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 		private Matiere matiere;
 		
 		@ManyToMany
+		
 		@JoinTable(name = "surveillance", joinColumns = @JoinColumn(name = "epreuve_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "surv_id", referencedColumnName = "id"))
 		private List<Surveillant> surveillants=new ArrayList<Surveillant>();
 		

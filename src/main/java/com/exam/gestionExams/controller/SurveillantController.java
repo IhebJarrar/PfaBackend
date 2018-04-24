@@ -1,6 +1,7 @@
 package com.exam.gestionExams.controller;
 
 import com.exam.gestionExams.model.Creneau;
+import com.exam.gestionExams.model.Epreuves;
 import com.exam.gestionExams.model.Surveillant;
 import com.exam.gestionExams.model.SurveillantDisponibilite;
 import com.exam.gestionExams.repository.CreneauRepository;
@@ -60,6 +61,18 @@ public class SurveillantController {
 	@GetMapping(value = "surveillants/noTreated")
 	public List<Surveillant> getAllNoTreatedSurveillants() {
 		return surveillantService.getAllNoTreatedSurveillants();
+	}
+	@GetMapping(value = "surveillants/permanents")
+	public List<Surveillant> getAllTreatedPermanents() {
+		return surveillantService.getAllTreatedPermanents();
+	}
+	@GetMapping(value = "surveillants/vacataire")
+	public List<Surveillant> getAllNoTreatedVacataires() {
+		return surveillantService.getAllNoTreatedVacataires();
+	}
+	@RequestMapping(value = "surveillants/Available")
+	public List<Surveillant> getSurveillantAvailableInThisCren(Epreuves e) {
+		return surveillantRepository.getSurveillantAvailableInThisCren(e);
 	}
 	/**@RequestMapping(value = "surveillants", method = RequestMethod.POST)
 	public Surveillant createSurveillant(@RequestBody Surveillant surveillant) {
