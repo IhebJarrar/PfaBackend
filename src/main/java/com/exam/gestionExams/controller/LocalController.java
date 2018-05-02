@@ -25,7 +25,7 @@ public class LocalController {
     public List<Local> getAllLocaux() {
         return localeService.getAllLocal();
     }
-    @GetMapping(value = "locauxAvailable")
+    @GetMapping(value = "locaux/available")
     public List<Local> getLocauxAvailable(@RequestBody() Epreuves epreuves) {
         return localeService.getLocauxAvailable(epreuves);
     }

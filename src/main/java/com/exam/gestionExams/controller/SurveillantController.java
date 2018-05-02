@@ -4,8 +4,10 @@ import com.exam.gestionExams.model.Creneau;
 import com.exam.gestionExams.model.Epreuves;
 import com.exam.gestionExams.model.Surveillant;
 import com.exam.gestionExams.model.SurveillantDisponibilite;
+import com.exam.gestionExams.model.SurveillantSchedule;
 import com.exam.gestionExams.repository.CreneauRepository;
 import com.exam.gestionExams.repository.SurveillantRepository;
+import com.exam.gestionExams.services.EpreuveService;
 import com.exam.gestionExams.services.SurveillantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -30,6 +32,8 @@ public class SurveillantController {
 	CreneauRepository creneauRepository;
 	@Autowired
 	private SurveillantService surveillantService;
+	@Autowired
+	private EpreuveService epreuveService;
 
 	@RequestMapping(value = "surveillants", method = RequestMethod.GET)
 	public List<Surveillant> getAllSurveillant() {
@@ -62,39 +66,25 @@ public class SurveillantController {
 	public List<Surveillant> getAllNoTreatedSurveillants() {
 		return surveillantService.getAllNoTreatedSurveillants();
 	}
+
 	@GetMapping(value = "surveillants/permanents")
-	public List<Surveillant> getAllTreatedPermanents() {
-		return surveillantService.getAllTreatedPermanents();
+	public List<Surveillant> getAllPermanentSurveillant() {
+		List<Surveillant> surveillants = surveillantService.getAllPermannets();
+		return surveillants;
 	}
+
 	@GetMapping(value = "surveillants/vacataire")
-	public List<Surveillant> getAllNoTreatedVacataires() {
-		return surveillantService.getAllNoTreatedVacataires();
-	}
-	@RequestMapping(value = "surveillants/Available")
-	public List<Surveillant> getSurveillantAvailableInThisCren(Epreuves e) {
-		return surveillantRepository.getSurveillantAvailableInThisCren(e);
-	}
-	/**@RequestMapping(value = "surveillants", method = RequestMethod.POST)
-	public Surveillant createSurveillant(@RequestBody Surveillant surveillant) {
-		return surveillantRepository.saveAndFlush(surveillant);
-	}
-<<<<<<< HEAD
-
-=======
->>>>>>> 60bbe209a444aceafeefa7f78e6f877a86a2d22d
-	
-	@RequestMapping(value = "surveillants/{id}", method = RequestMethod.PUT)
-	public Surveillant updateSurveillant(@PathVariable Long id, @RequestBody Surveillant surveillant) {
-		Surveillant existingSurveillant = surveillantRepository.findOne(id);
-		BeanUtils.copyProperties(shipwreck, existingSurveillant);
-		return surveillantRepository.saveAndFlush(existingSurveillant);
+	public List<Surveillant> getAllVacataireSurveillant() {
+		return surveillantService.getAllVacataires();
 	}
 
-	@RequestMapping(value = "surveillants/{id}", method = RequestMethod.DELETE)
-	public Surveillant deleteSurveillant(@PathVariable Long id) {
-		Surveillant existingSurveillant = surveillantRepository.findOne(id);
-		surveillantRepository.delete(existingSurveillant);
-		return existingSurveillant;
-	}**/
-
+	@RequestMapping(value = "surveillants/available/epreuve/{id}")
+	public List<Surveillant> getSurveillantAvailableInThisCren(@PathVariable Long id) {
+		Epreuves epreuve = epreuveService.getEpreuve(id);
+		return surveillantRepository.getSurveillantAvailableInThisCren(epreuve);
+	}
+	@RequestMapping(value = "surveillants/schedule")
+	public List<SurveillantSchedule> getSurveillantSchedule() {
+		return surveillantService.getSurveillantSchedule();
+	}
 }

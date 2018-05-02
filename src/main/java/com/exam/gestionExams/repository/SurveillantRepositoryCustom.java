@@ -1,10 +1,12 @@
 package com.exam.gestionExams.repository;
 
-import java.util.List;
-
 import com.exam.gestionExams.model.Epreuves;
 import com.exam.gestionExams.model.Surveillant;
+import com.exam.gestionExams.model.SurveillantSchedule;
+
+import java.util.List;
 
 public interface SurveillantRepositoryCustom {
 	List<Surveillant> getSurveillantAvailableInThisCren(Epreuves epreuve);
+	public List<SurveillantSchedule> getSurveillantSchedule() ;
 }

@@ -1,5 +1,7 @@
 package com.exam.gestionExams.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,8 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 public class Surveillant {
 
@@ -20,14 +20,23 @@ public class Surveillant {
 	private String nom;
 	private String type;
 	private Float nbrHeure;
-	@ManyToMany(mappedBy = "surveillants")
+	private Float nbrHeureAffected;
 	@JsonIgnore
-	private List<Epreuves> epreuves=new ArrayList<Epreuves>();
+	@ManyToMany(mappedBy = "surveillants")
+	private List<Epreuves> epreuves = new ArrayList<Epreuves>();
 	@ManyToMany
 	@JoinTable(name = "disponibilite", joinColumns = @JoinColumn(name = "surv_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "creneau_id", referencedColumnName = "id"))
 	private List<Creneau> creneaux=new ArrayList<Creneau>();
 	
 	
+	public Float getNbrHeureAffected() {
+		if(this.nbrHeureAffected==null) 
+			this.nbrHeureAffected=0f;
+		return nbrHeureAffected;
+	}
+	public void setNbrHeureAffected(Float nbrHeureAffected) {
+		this.nbrHeureAffected = nbrHeureAffected;
+	}
 	public List<Epreuves> getEpreuves() {
 		return epreuves;
 	}

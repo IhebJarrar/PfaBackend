@@ -6,5 +6,6 @@ import com.exam.gestionExams.model.Epreuves;
 
 public interface EpreuveService {
 	
-public List<Epreuves> getAllEpreuves();
+    List<Epreuves> getAllEpreuves();
+    Epreuves getEpreuve(Long id);
 }

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -14,34 +13,32 @@ import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-	@Entity
-	public class Epreuves {
+@Entity
+public class Epreuves {
+	@Id
+	@GeneratedValue
+	private Long id;
+	private String nom;
+	private Float duree;
+	@ManyToOne
+	@JoinColumn(name="local")
+	private Local local;
+	@ManyToOne
+	@JoinColumn(name="creneau")
+	private Creneau creneau;
+	@ManyToOne
+	@JoinColumn(name="groupe")
+	private Groupe groupe;
+	@JsonIgnore
+	@ManyToOne()
+	@JoinColumn(name="matiere")
+	private Matiere matiere;
 
-		@Id
-		@GeneratedValue
-		private Long id;
-		private String nom;
-		private Float duree;
-		@ManyToOne
-		@JoinColumn(name="local")
-		private Local local;
-		@ManyToOne
-		@JoinColumn(name="creneau")
-		private Creneau creneau;
-		@ManyToOne
-		@JoinColumn(name="groupe")
-		private Groupe groupe;
-		@JsonIgnore
-		@ManyToOne(fetch=FetchType.LAZY)
-		@JoinColumn(name="matiere")
-		private Matiere matiere;
-		
-		@ManyToMany
-		
-		@JoinTable(name = "surveillance", joinColumns = @JoinColumn(name = "epreuve_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "surv_id", referencedColumnName = "id"))
-		private List<Surveillant> surveillants=new ArrayList<Surveillant>();
-		
-		public long getId() {
+	@ManyToMany
+	@JoinTable(name = "surveillance", joinColumns = @JoinColumn(name = "epreuve_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "surv_id", referencedColumnName = "id"))
+	private List<Surveillant> surveillants=new ArrayList<Surveillant>();
+
+	public long getId() {
 			return id;
 		}
 		public void setId(long id) {

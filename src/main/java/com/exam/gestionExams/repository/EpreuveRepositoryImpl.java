@@ -17,7 +17,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
-import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -127,7 +126,7 @@ public class EpreuveRepositoryImpl implements EpreuveRepositoryCustom {
 			}
 		}
 		//ajouter les modifs a la base
-	updatingLocalForEpreuve(epreuves);
+		updatingLocalForEpreuve(epreuves);
 
 	}
 
@@ -142,15 +141,23 @@ public class EpreuveRepositoryImpl implements EpreuveRepositoryCustom {
 	public void affecterSurv() {
 		
 		//requete pour avoir les surveillants permanents
-		TypedQuery<SurveillantWithOtherAttribute> requetesurvPermanent=em.createQuery("select new com.exam.gestionExams.model.SurveillantWithOtherAttribute(s,0.0f,s.nbrHeure) from Surveillant s WHERE s.type='EPI'",SurveillantWithOtherAttribute.class);
+		TypedQuery<SurveillantWithOtherAttribute> requetesurvPermanent=em.createQuery("select new com.exam.gestionExams.model.SurveillantWithOtherAttribute(s,s.nbrHeure) from Surveillant s WHERE s.type='EPI'",SurveillantWithOtherAttribute.class);
 		//recuperer les resultats de la requete survPermanent
 		Collection<SurveillantWithOtherAttribute> survPermanents=requetesurvPermanent.getResultList();
+		//restorer leurs nbr_heure_affected a zero(en cas on exécute l'algo 2fois ou plus)
+		for(SurveillantWithOtherAttribute surv:survPermanents) {
+			surv.getSurveillant().setNbrHeureAffected(0f);
+		}
 		
 		//requete pour avoir les surveillants Vacataires
-		TypedQuery<SurveillantWithOtherAttribute> requetesurvVacataires=em.createQuery("select new com.exam.gestionExams.model.SurveillantWithOtherAttribute(s,0.0f,s.nbrHeure) from Surveillant s WHERE s.type!='EPI' OR s.type is null",SurveillantWithOtherAttribute.class);
+		TypedQuery<SurveillantWithOtherAttribute> requetesurvVacataires=em.createQuery("select new com.exam.gestionExams.model.SurveillantWithOtherAttribute(s,s.nbrHeure) from Surveillant s WHERE s.type!='EPI' OR s.type is null",SurveillantWithOtherAttribute.class);
 		//recuperer les resultats de la requete survVacataires
 		Collection<SurveillantWithOtherAttribute> survVacataires=requetesurvVacataires.getResultList();
-
+		//restorer leurs nbr_heure_affected a zero(en cas on exécute l'algo 2fois ou plus)
+		for(SurveillantWithOtherAttribute surv:survVacataires) {
+				surv.getSurveillant().setNbrHeureAffected(0f);
+			}
+		
 		//trié les creneaux des differents surveillant en ordre croissant
 		trierCreneauSurveillant(survPermanents);
 		trierCreneauSurveillant(survVacataires);
@@ -220,12 +227,15 @@ private void AffectationEpreuvesToSurveillant(Collection<SurveillantWithOtherAtt
 				epreuvesTrouvées =epreuvesPermanents.stream().filter((epreuve)-> epreuve.getEpreuve().getCreneau().getId()== cren.getId() && epreuve.getNbrSurveillant()!=0).collect(Collectors.toList());
 
 			}
-			if(surveillant.getHoursLeft()<=0.5)//le surv a plus que 30min
+			if(surveillant.getHoursLeft()<=0)
 			{
 				break;
 			}
 			if(epreuvesTrouvées.size()!=0)
 			{
+				//actualiser les infos du surv
+				surveillant.setHoursLeft(surveillant.getHoursLeft()-epreuvesTrouvées.get(0).getEpreuve().getDuree());
+				surveillant.getSurveillant().setNbrHeureAffected(surveillant.getSurveillant().getNbrHeureAffected()+epreuvesTrouvées.get(0).getEpreuve().getDuree());
 				//créer le surveillant qu'on est entrain de le parcourir
 				Surveillant s=surveillant.getSurveillant();
 				ajoutSurveillantToEpreuve(s,epreuvesTrouvées.get(0).getEpreuve());
@@ -239,9 +249,7 @@ private void AffectationEpreuvesToSurveillant(Collection<SurveillantWithOtherAtt
 						break;
 					}
 				}
-				//actualiser les infos du surv
-				surveillant.setHoursLeft(surveillant.getHoursLeft()-1.5f);
-				surveillant.setHoursAffected(surveillant.getHoursAffected()+1.5f);
+				
 			}
 		}
 	}
@@ -290,7 +298,7 @@ private void calculHeureSurveillanceForEachVacataire(Collection<SurveillantWithO
 		pourcentageCreneauParVacataire=(float)nbrCreneauxDisponible/totalCrenVaca;
 		System.out.println("pourcentageCreneauParVacataire =" +pourcentageCreneauParVacataire);
 		nbrHeuresParVacataire=Math.round(nbrHeureSurvRestants*pourcentageCreneauParVacataire);
-		surv.setHoursAffected(nbrHeuresParVacataire);
+		surv.setHoursLeft(nbrHeuresParVacataire);//surv.getSurveillant().setNbrHeureAffected(nbrHeuresParVacataire);
 		surv.getSurveillant().setNbrHeure(nbrHeuresParVacataire);
 		System.out.println("nbrHeuresParVacataire =" +nbrHeuresParVacataire);
 	}

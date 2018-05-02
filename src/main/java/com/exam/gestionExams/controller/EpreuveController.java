@@ -40,7 +40,7 @@ public class EpreuveController {
     	epreuveRepository.affecterSurv();
     }
 	
-	@GetMapping(value = "epreuves/all", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "epreuves/all")
 	public List<Epreuves> getAllEpreuves() {
 		return epreuveService.getAllEpreuves();
 	}

@@ -8,7 +8,4 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface EpreuveRepository extends JpaRepository<Epreuves, Long>, EpreuveRepositoryCustom {
 
-
-	@Query("select e from Epreuves e")
-    List<Epreuves> getAllEpreuves();
 }

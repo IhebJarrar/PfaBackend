@@ -14,7 +14,11 @@ public class EpreuveServiceImpl implements EpreuveService {
     EpreuveRepository epreuveRepository;
 	
 	public List<Epreuves> getAllEpreuves() {
-		return epreuveRepository.getAllEpreuves();
+		return epreuveRepository.findAll();
 	}
 
+	@Override
+	public Epreuves getEpreuve(Long id) {
+		return epreuveRepository.findOne(id);
+	}
 }

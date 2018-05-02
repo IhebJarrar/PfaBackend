@@ -2,6 +2,7 @@ package com.exam.gestionExams.services;
 
 import com.exam.gestionExams.model.Epreuves;
 import com.exam.gestionExams.model.Surveillant;
+import com.exam.gestionExams.model.SurveillantSchedule;
 import com.exam.gestionExams.repository.SurveillantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,19 +24,25 @@ public class SurveillantServiceImpl implements SurveillantService {
         return surveillantRepository.getAllNoTreatedSurveillants();
     }
 
-	@Override
-	public List<Surveillant> getAllTreatedPermanents() {
-		return surveillantRepository.getAllTreatedPermanents();
-	}
+    @Override
+    public List<Surveillant> getAllPermannets() {
+        return surveillantRepository.getAllPermanents();
+    }
+
+    @Override
+    public List<Surveillant> getAllVacataires() {
+        return surveillantRepository.getAllVacatiare();
+    }
+
+    @Override
+    public List<Surveillant> getSurveillantAvailableInThisCren(Epreuves epreuve) {
+
+        return surveillantRepository.getSurveillantAvailableInThisCren(epreuve);
+    }
 
 	@Override
-	public List<Surveillant> getAllNoTreatedVacataires() {
-		return surveillantRepository.getAllNoTreatedVacataires();
-	}
-
-	@Override
-	public List<Surveillant> getSurveillantAvailableInThisCren(Epreuves epreuve) {
-		
-		return surveillantRepository.getSurveillantAvailableInThisCren(epreuve);
+	public List<SurveillantSchedule> getSurveillantSchedule() {
+		// TODO Auto-generated method stub
+		return surveillantRepository.getSurveillantSchedule();
 	}
 }
