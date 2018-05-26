@@ -39,10 +39,9 @@ public class SurveillantServiceImpl implements SurveillantService {
 
         return surveillantRepository.getSurveillantAvailableInThisCren(epreuve);
     }
-
-	@Override
-	public List<SurveillantSchedule> getSurveillantSchedule() {
-		// TODO Auto-generated method stub
-		return surveillantRepository.getSurveillantSchedule();
-	}
+    @Override
+    public List<SurveillantSchedule> getSurveillantSchedule() {
+        // TODO Auto-generated method stub
+        return surveillantRepository.getSurveillantSchedule();
+    }
 }

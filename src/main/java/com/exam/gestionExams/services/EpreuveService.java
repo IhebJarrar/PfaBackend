@@ -8,4 +8,6 @@ public interface EpreuveService {
 	
     List<Epreuves> getAllEpreuves();
     Epreuves getEpreuve(Long id);
+    void ListepreuvesToPdf(List<Epreuves> liste);
+    void epreuveToPdf(Epreuves e);
 }

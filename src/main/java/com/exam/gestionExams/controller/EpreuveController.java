@@ -13,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -44,17 +45,22 @@ public class EpreuveController {
 	public List<Epreuves> getAllEpreuves() {
 		return epreuveService.getAllEpreuves();
 	}
-	/* recevoir les epreuves modifiés
-	@PostMapping(value = "epreuves/update")
+	@PutMapping(value = "epreuves/all/update")
 	public void updateLocauxEpreuves(@RequestBody() List<Epreuves> epreuves) 
 	{
 		for (Epreuves epreuve: epreuves) 
 		{
 			epreuveRepository.saveAndFlush(epreuve);
 		}
-
-	
 	}
-	*/
+    @PutMapping(value = "epreuves/single/update")
+    public void updateEpreuveSurveillant(@RequestBody() Epreuves epreuve)
+    {
+        epreuveRepository.saveAndFlush(epreuve);
+    }
+    @PostMapping(value = "epreuves/pdf")
+    public void epreuvesToPdf(@RequestBody List<Epreuves> liste) {
+        epreuveService.ListepreuvesToPdf(liste);
+    }
 }
 

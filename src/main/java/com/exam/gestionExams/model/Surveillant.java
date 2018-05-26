@@ -27,10 +27,10 @@ public class Surveillant {
 	@ManyToMany
 	@JoinTable(name = "disponibilite", joinColumns = @JoinColumn(name = "surv_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "creneau_id", referencedColumnName = "id"))
 	private List<Creneau> creneaux=new ArrayList<Creneau>();
-	
-	
+
+
 	public Float getNbrHeureAffected() {
-		if(this.nbrHeureAffected==null) 
+		if(this.nbrHeureAffected==null)
 			this.nbrHeureAffected=0f;
 		return nbrHeureAffected;
 	}
@@ -43,7 +43,7 @@ public class Surveillant {
 	public void setEpreuves(List<Epreuves> epreuves) {
 		this.epreuves = epreuves;
 	}
-	
+
 	public List<Creneau> getCreneaux() {
 		return creneaux;
 	}
@@ -74,6 +74,6 @@ public class Surveillant {
 	public void setNbrHeure(Float nbrHeure) {
 		this.nbrHeure = nbrHeure;
 	}
-	
-	
+
+
 }

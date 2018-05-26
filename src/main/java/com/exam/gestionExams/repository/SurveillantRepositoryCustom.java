@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface SurveillantRepositoryCustom {
 	List<Surveillant> getSurveillantAvailableInThisCren(Epreuves epreuve);
-	public List<SurveillantSchedule> getSurveillantSchedule() ;
+	List<SurveillantSchedule> getSurveillantSchedule() ;
 }

@@ -15,7 +15,7 @@ private Date date;
 private String heureDebut;
 
 public SurveillantSchedule(String nomSurv, String type, Float nbrHeure, Float nbrHeureAffected, String nomEpreuve,
-		Float durée, String nomSalle, int etage, Date date, String heureDebut) {
+                           Float durée, String nomSalle, int etage, Date date, String heureDebut) {
 	super();
 	this.nomSurv = nomSurv;
 	this.type = type;

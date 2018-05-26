@@ -35,7 +35,7 @@ public class SurveillantController {
 	@Autowired
 	private EpreuveService epreuveService;
 
-	@RequestMapping(value = "surveillants", method = RequestMethod.GET)
+	@RequestMapping(value = "surveillants/all", method = RequestMethod.GET)
 	public List<Surveillant> getAllSurveillant() {
 		return surveillantRepository.findAll();
 	}

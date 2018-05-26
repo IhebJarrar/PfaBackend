@@ -22,5 +22,5 @@ public class SurveillantWithOtherAttribute {
 	public void setHoursLeft(float hoursLeft) {
 		this.hoursLeft = hoursLeft;
 	}
-	
+
 }

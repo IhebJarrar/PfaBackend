@@ -11,6 +11,6 @@ public interface SurveillantService {
     public List<Surveillant> getAllNoTreatedSurveillants();
     public List<Surveillant> getAllPermannets();
     public List<Surveillant> getAllVacataires();
-    List<Surveillant> getSurveillantAvailableInThisCren(Epreuves epreuve) ;
-    public List<SurveillantSchedule> getSurveillantSchedule();
+    List<Surveillant> getSurveillantAvailableInThisCren(Epreuves epreuve);
+    List<SurveillantSchedule> getSurveillantSchedule();
 }
