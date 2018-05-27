@@ -12,7 +12,7 @@ public class NivSpecialityServiceImpl implements NivSpecialityService {
     NivSpecialityRepository nivSpecialityRepository;
 
     @Override
-    public NivSpecialite getNivSpecialityByLevelAndSpec(Integer level, Long speciality) {
+    public NivSpecialite getNivSpecialityByLevelAndSpec(Integer level, String speciality) {
         return nivSpecialityRepository.getSpecialityLevelId(level, speciality);
     }
 }

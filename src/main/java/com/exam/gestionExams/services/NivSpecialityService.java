@@ -5,5 +5,5 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface NivSpecialityService {
-    NivSpecialite getNivSpecialityByLevelAndSpec(Integer level, Long speciality);
+    NivSpecialite getNivSpecialityByLevelAndSpec(Integer level, String speciality);
 }

@@ -14,13 +14,11 @@ public class NivSpecialityRepositoryImpl implements NivSpecialityRepository {
     EntityManager em;
 
     @Override
-    public NivSpecialite getSpecialityLevelId(Integer niveau, Long specialiteId) {
-        System.out.println("niveau:" + niveau + "spec: " + specialiteId);
-        System.out.println("getNivSpecId");
+    public NivSpecialite getSpecialityLevelId(Integer niveau, String specialiteName) {
         TypedQuery<NivSpecialite> query = em.createQuery("select nv from NivSpecialite nv " +
-                "where nv.niveau.niveau = :niveau and nv.specialite.id = :specId", NivSpecialite.class);
+                "where nv.niveau.niveau = :niveau and nv.specialite.nom = :specialiteName", NivSpecialite.class);
         query.setParameter("niveau", niveau);
-        query.setParameter("specId", specialiteId);
+        query.setParameter("specialiteName", specialiteName);
         List<NivSpecialite> nivSpecialites = query.getResultList();
         if(nivSpecialites.isEmpty()) {
             NivSpecialite nivSpecialite = new NivSpecialite();

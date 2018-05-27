@@ -33,14 +33,12 @@ public class ClasseController {
         return classeService.getAll();
     }
 
-    @GetMapping(value = "classes/speciality/{specId}/niveau/{nivId}")
-    public NivSpecialite getNivSpecId(@PathVariable Long specId, @PathVariable Integer nivId) {
-        return nivSpecialityService.getNivSpecialityByLevelAndSpec(nivId, specId);
+    @GetMapping(value = "classes/speciality/{specName}/niveau/{nivId}")
+    public NivSpecialite getNivSpecId(@PathVariable String specName, @PathVariable Integer nivId) {
+        return nivSpecialityService.getNivSpecialityByLevelAndSpec(nivId, specName);
     }
     @PostMapping(value = "classes")
     public Classe saveClasse(@RequestBody() Classe classe) {
-        System.out.println("le nom de la classe " + classe.getNom());
-        System.out.println("l'id: " + classe.getId());
         return classeService.saveClasse(classe);
     }
     @PutMapping(value = "classes/update/{id}")

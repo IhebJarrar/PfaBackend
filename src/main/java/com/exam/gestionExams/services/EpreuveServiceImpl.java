@@ -34,7 +34,7 @@ public class EpreuveServiceImpl implements EpreuveService {
 
 	@Override
 	public void epreuveToPdf(Epreuves e) {
-		String result = "C:/Users/mohamed/Desktop/epreuve"+e.getId()+".pdf";///home/iheb/Bureau/pdf/epreuve
+		String result = "/home/iheb/Bureau/pdf/epreuve"+e.getId()+".pdf";//C:/Users/mohamed/Desktop/epreuve
 		try {
 
 			// step 1
@@ -54,14 +54,14 @@ public class EpreuveServiceImpl implements EpreuveService {
 			document.add(p2);
 
 			// salle rectangle
-	        Font fontLabel = new Font(FontFamily.HELVETICA, 16, Font.BOLD);
-	        Font fontData = new Font(FontFamily.TIMES_ROMAN, 18, Font.ITALIC, BaseColor.GRAY);
+			Font fontLabel = new Font(FontFamily.HELVETICA, 16, Font.BOLD);
+			Font fontData = new Font(FontFamily.TIMES_ROMAN, 18, Font.ITALIC, BaseColor.GRAY);
 			PdfPTable table = new PdfPTable(1);
 			Chunk chunkLabel = new Chunk("Salle :",fontLabel);
 			Paragraph paragrapheSalle= new Paragraph();
 			paragrapheSalle.add(chunkLabel);
 			Chunk chunkData = new Chunk("",fontData);
-			
+
 			if(e.getLocal()!=null) {
 				chunkData.append(e.getLocal().getNom()+"E"+e.getLocal().getEtage());
 			}
@@ -88,9 +88,9 @@ public class EpreuveServiceImpl implements EpreuveService {
 			PdfPTable rectDonnée = new PdfPTable(1);
 			Paragraph paragrapheDataTableLeft= new Paragraph();
 			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-		    String dateFormatted = formatter.format(e.getCreneau().getDate());
-		    Chunk chunkLabelDate = new Chunk("Date :",fontLabel);
-		    paragrapheDataTableLeft.add(chunkLabelDate);
+			String dateFormatted = formatter.format(e.getCreneau().getDate());
+			Chunk chunkLabelDate = new Chunk("Date :",fontLabel);
+			paragrapheDataTableLeft.add(chunkLabelDate);
 			Chunk chunkDate = new Chunk(dateFormatted,fontData);
 			paragrapheDataTableLeft.add(chunkDate);
 			Chunk chunkLabelSeance = new Chunk("\nSeance : ",fontLabel);

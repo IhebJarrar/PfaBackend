@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface NivSpecialityRepository {
-    NivSpecialite getSpecialityLevelId(Integer niveau, Long specialiteId);
+    NivSpecialite getSpecialityLevelId(Integer niveau, String specialiteName);
 }
